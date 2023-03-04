@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+  {%if category %}
+    {{category.description|truncatewords:155 }}
+  {% else %}
+    Welcome to MyKart where you can buy different items...
+  {% endif %}
+{% endblock %}
+
+{% block title %}
+  {%if category %}
+    {{category.name }} -- Mykart
+  {% else %}
+    See our new collections -- Mykart
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+{%if category %}
+    <div>
+      <div class="row my_row_class">
+        <div class="mx-auto">
+        <p><a href="{% url 'kartApp:allProdCat' %}"></a>Our Product Collections</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+<div class="mx-auto">
+  {% if category %}
+  <img class="my_image" src="{{ category.image.url}}" alt="{{category.name}}" width="1200px;" height="400px;">
+</div>
+<br>
+<div>
+  <h1 class="text-center my_title" >{{category.name}}</h1>
+  <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+  <div>
+    <img class="my_image img_padding" src="{% static 'img/bann.png' %}" alt="our product" width="1200px;" height="300px;" >
+  </div>
+</div>
+<br>
+<div>
+  <h1 class="text-center my_title">Our Product Collections</h1>
+  <p class="text-justify">The problem occurs only when you copy and then load these files from your own server. In order to fix this for locally loaded files, simply remove the last line in the JavaScript file(s) downloaded from JsDelivr.</p>
+</div>
+ {% endif %}
+
+<div class="container">
+  <div class="row mx-auto">
+    {% for prod in products.object_list %}
+    <div class="bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+      <div class="card text-center" style="width:18rem;">
+        <a href="{{prod.get_url}}"><img class="card-img-top card_image" src="{{prod.image.url}}" alt="{{prod.name}}"></a>
+        <div class="card-body">
+          <h4>{{prod.name}}</h4>
+           <p>{{prod.price}}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+    <div class="mx-auto">
+      {% if products.paginator.num_pages > 1 %}
+      <hr>
+      <div class="text-centeer">
+        {% for pg in products.paginator.page_range %}
+        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+      {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <br>
+</div>
+
+{% endblock %}
